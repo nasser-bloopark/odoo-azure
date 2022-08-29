@@ -1,0 +1,31 @@
+version: "3"
+services:
+  web:
+    container_name: odoo15
+    build: .
+    platform: linux/amd64
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    tty: true
+    stdin_open: true
+    volumes:
+      - odoo-odoo15-data:/var/lib/odoo
+      - ./odoo.conf:/etc/odoo/odoo.conf
+      - ./custom_addons:/mnt/custom_addons
+  db:
+    container_name: odoo15-db
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_USER=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+volumes:
+  odoo-odoo15-data:
+  odoo-db-data:

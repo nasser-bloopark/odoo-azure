@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Pull a pre-built alpine docker image with nginx and python3 installed
 FROM tiangolo/uwsgi-nginx:python3.8-alpine-2020-12-19
 
@@ -32,3 +33,35 @@ COPY . /hello_app
 #COPY requirements.txt /
 #RUN pip install --no-cache-dir -U pip
 #RUN pip install --no-cache-dir -r /requirements.txt
+=======
+FROM odoo:15.0
+
+USER root
+
+SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
+
+# Generate locale C.UTF-8 for postgres and general locale data
+ENV LANG C.UTF-8
+
+# Set timezone in non interactive way
+RUN DEBIAN_FRONTEND="noninteractive" apt-get update && apt-get -y install tzdata
+
+
+RUN apt-get update \
+        && apt-get install -y --no-install-recommends \
+            ca-certificates \
+            curl \
+            wget \
+            sudo \
+            software-properties-common \
+            nano \
+            apt-utils
+
+# Install requirements
+RUN pip3 install --upgrade pip
+COPY ./requirements.txt /requirements_custom.txt
+RUN pip3 install -r /requirements_custom.txt
+
+# Set default user when running the container
+USER odoo
+>>>>>>> 5cf6324 (add odoo env)
