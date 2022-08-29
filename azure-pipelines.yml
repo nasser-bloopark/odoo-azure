@@ -6,7 +6,7 @@
 # https://www.shedloadofcode.com/blog/automated-deployment-of-a-vue-flask-app-using-azure-pipelines
 
 trigger:
-- flask
+- main
 
 variables:
   subscriptionID: 'Testing' # https://stackoverflow.com/questions/60437249/how-to-parametrize-azuresubscription-in-azure-devops-template-task
