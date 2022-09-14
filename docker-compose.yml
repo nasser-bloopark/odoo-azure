@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    container_name: odoo15
+    container_name: odoo15-azure-src
     build: .
     platform: linux/amd64
     depends_on:
@@ -15,7 +15,7 @@ services:
       - ./odoo.conf:/etc/odoo/odoo.conf
       - ./custom_addons:/mnt/custom_addons
   db:
-    container_name: odoo15-db
+    container_name: odoo15-azure-db
     image: postgres:13
     environment:
       - POSTGRES_DB=postgres
