@@ -28,9 +28,5 @@ RUN pip3 install -r /requirements_custom.txt
 ADD ./odoo.conf /etc/odoo/odoo.conf
 ADD ./custom_addons /mnt/custom_addons
 
-# Set the access
-RUN chown -R odoo:odoo /odoo
-RUN chown -R odoo:odoo /etc/odoo/odoo.conf
-
 # Set default user when running the container
 USER odoo
