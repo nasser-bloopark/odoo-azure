@@ -16,7 +16,7 @@ variables:
   environmentName: 'OdooEnv'
   appName: 'odoo-azure'
   projectRoot: $(System.DefaultWorkingDirectory)
-  dockerImageName: 'odoo-azure-img:$(Build.BuildId)'
+  dockerImageName: 'odoo-azure-img'
   dockerHub: 'https://index.docker.io/v1/'
 
 stages:
