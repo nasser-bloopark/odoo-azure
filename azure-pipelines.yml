@@ -45,9 +45,9 @@ stages:
         displayName: Push Docker Image
         inputs:
           containerRegistry: "DockerHub"
-          repository: $(imageName)
+          repository: $(dockerImageName)
           command: push
-          tags: 'latest'
+          tags: $(dockerImageName)
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '$(pythonVersion)'
