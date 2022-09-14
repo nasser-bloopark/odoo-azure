@@ -43,9 +43,7 @@ stages:
           containerRegistry: "DockerHub"
           repository: $(imageName)
           command: push
-          tags: |
-            test1
-            test2
+          tags: $(Build.BuildId)
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '$(pythonVersion)'
