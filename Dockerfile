@@ -2,8 +2,6 @@ FROM odoo:15.0
 
 USER root
 
-SHELL ["/bin/bash", "-xo", "pipefail", "-c"]
-
 # Generate locale C.UTF-8 for postgres and general locale data
 ENV LANG C.UTF-8
 
