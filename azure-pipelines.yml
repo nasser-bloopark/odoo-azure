@@ -41,13 +41,13 @@ stages:
           repository: $(dockerImageName)
           command: build
           Dockerfile: Dockerfile
-      - task: Docker@2
+      - task: Docker@2.176.0
         displayName: Push Docker Image
         inputs:
           containerRegistry: "DockerHub"
           repository: $(imageName)
           command: push
-#          tags: $(image_tags)
+          tags: '$(image_tags)'
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '$(pythonVersion)'
