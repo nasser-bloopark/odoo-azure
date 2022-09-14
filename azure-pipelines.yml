@@ -7,6 +7,7 @@
 
 trigger:
 - main
+- odoo
 
 variables:
   subscriptionID: 'Testing' # https://stackoverflow.com/questions/60437249/how-to-parametrize-azuresubscription-in-azure-devops-template-task
@@ -15,6 +16,8 @@ variables:
   environmentName: 'OdooEnv'
   appName: 'odoo-azure'
   projectRoot: $(System.DefaultWorkingDirectory)
+  dockerImageName: 'odoo-azure-img:$(Build.BuildId)'
+  dockerHub: 'https://index.docker.io/v1/'
 
 stages:
 - stage: Build
@@ -28,6 +31,22 @@ stages:
           Python38:
             python.version: $(pythonVersion)
       steps:
+        - task: Docker@2
+          displayName: Build Docker Image
+          inputs:
+            repository: $(dockerImageName)
+            command: build
+            Dockerfile: Dockerfile
+        - task: Docker@2
+          displayName: Push Docker Image
+          inputs:
+            containerRegistry: |
+              $(dockerHub)
+            repository: $(imageName)
+            command: push
+            tags: |
+              test1
+              test2
       - task: UsePythonVersion@0
         inputs:
           versionSpec: '$(pythonVersion)'
@@ -40,17 +59,17 @@ stages:
           pip install pytest pytest-azurepipelines
           pytest
         displayName: 'pytest'
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: '$(projectRoot)'
-          includeRootFolder: false
-          archiveType: zip
-          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-          replaceExistingArchive: true
-        displayName: 'Archive files'
-      - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
-        displayName: 'Upload package'
-        artifact: drop
+#      - task: ArchiveFiles@2
+#        inputs:
+#          rootFolderOrFile: '$(projectRoot)'
+#          includeRootFolder: false
+#          archiveType: zip
+#          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+#          replaceExistingArchive: true
+#        displayName: 'Archive files'
+#      - upload: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+#        displayName: 'Upload package'
+#        artifact: drop
 
 - stage: Deploy
   displayName: 'Build Application'
@@ -65,17 +84,12 @@ stages:
         runOnce:
           deploy:
             steps:
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '$(pythonVersion)'
-              displayName: 'Use Python $(pythonVersion)'
-            - task: PublishBuildArtifacts@1
-              inputs:
-                pathtoPublish: '$(Build.ArtifactStagingDirectory)'
-            - task: AzureWebApp@1
-              displayName: 'Deploy application on Azure'
-              inputs:
-                azureSubscription: $(subscriptionID)
-                appName: $(appName)
-                package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-                startUpCommand: 'gunicorn --bind=0.0.0.0 --workers=4 startup:app'
+#            - task: PublishBuildArtifacts@1
+#              inputs:
+#                pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            - task: AzureWebAppContainer@1
+                displayName: 'Azure Web App on Container Deploy'
+                inputs:
+                  azureSubscription: $(subscriptionID)
+                  appName: $(appName)
+                  imageName: $(dockerImageName)
