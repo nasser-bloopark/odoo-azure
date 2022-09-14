@@ -45,18 +45,18 @@ stages:
 #          repository: $(dockerImageName)
 #          command: push
 #          tags: $(image_tags)
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '$(pythonVersion)'
-        displayName: 'Use Python $(pythonVersion)'
-      - script: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-        displayName: 'Install dependencies'
-      - script: |
-          pip install pytest pytest-azurepipelines
-          pytest
-        displayName: 'pytest'
+#      - task: UsePythonVersion@0
+#        inputs:
+#          versionSpec: '$(pythonVersion)'
+#        displayName: 'Use Python $(pythonVersion)'
+#      - script: |
+#          python -m pip install --upgrade pip
+#          pip install -r requirements.txt
+#        displayName: 'Install dependencies'
+#      - script: |
+#          pip install pytest pytest-azurepipelines
+#          pytest
+#        displayName: 'pytest'
 #      - task: ArchiveFiles@2
 #        inputs:
 #          rootFolderOrFile: '$(projectRoot)'
